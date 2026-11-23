@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hey_dane/app/core/constants/app_identity.dart';
 import 'package:hey_dane/app/core/theme/dane_colors.dart';
@@ -136,7 +136,8 @@ class AboutScreen extends ConsumerWidget {
                     children: [
                       const Text(
                         'Native Android Platform Bridge',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 8),
                       Text('Device: ${device.manufacturer} ${device.model}'),
@@ -151,7 +152,8 @@ class AboutScreen extends ConsumerWidget {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (_, __) => const Text('Unable to query native device info.'),
+                error: (_, __) =>
+                    const Text('Unable to query native device info.'),
               ),
             ),
             const SizedBox(height: 16),

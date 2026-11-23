@@ -95,9 +95,11 @@ class AutomationFeatureFlags {
     bool? alarmsAndFilesEnabled,
   }) {
     return AutomationFeatureFlags(
-      appsAndSettingsEnabled: appsAndSettingsEnabled ?? this.appsAndSettingsEnabled,
+      appsAndSettingsEnabled:
+          appsAndSettingsEnabled ?? this.appsAndSettingsEnabled,
       commsEnabled: commsEnabled ?? this.commsEnabled,
-      alarmsAndFilesEnabled: alarmsAndFilesEnabled ?? this.alarmsAndFilesEnabled,
+      alarmsAndFilesEnabled:
+          alarmsAndFilesEnabled ?? this.alarmsAndFilesEnabled,
     );
   }
 }

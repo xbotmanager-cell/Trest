@@ -48,7 +48,8 @@ class OpenRouterProvider implements AiProvider {
       throw const AiException(
         kind: AiErrorKind.missingCredentials,
         providerId: 'openrouter',
-        message: 'OpenRouter API key is not configured. Add a key in API Manager.',
+        message:
+            'OpenRouter API key is not configured. Add a key in API Manager.',
       );
     }
 
@@ -242,12 +243,10 @@ class OpenRouterProvider implements AiProvider {
 
     final sw = Stopwatch()..start();
     try {
-      final response = await _client
-          .get(
-            Uri.parse('$_baseUrl/auth/key'),
-            headers: {'Authorization': 'Bearer $key'},
-          )
-          .timeout(const Duration(seconds: 12));
+      final response = await _client.get(
+        Uri.parse('$_baseUrl/auth/key'),
+        headers: {'Authorization': 'Bearer $key'},
+      ).timeout(const Duration(seconds: 12));
       sw.stop();
 
       if (response.statusCode == 200) {

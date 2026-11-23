@@ -231,12 +231,10 @@ class GroqProvider implements AiProvider {
 
     final sw = Stopwatch()..start();
     try {
-      final response = await _client
-          .get(
-            Uri.parse('$_baseUrl/models'),
-            headers: {'Authorization': 'Bearer $key'},
-          )
-          .timeout(const Duration(seconds: 12));
+      final response = await _client.get(
+        Uri.parse('$_baseUrl/models'),
+        headers: {'Authorization': 'Bearer $key'},
+      ).timeout(const Duration(seconds: 12));
       sw.stop();
 
       if (response.statusCode == 200) {

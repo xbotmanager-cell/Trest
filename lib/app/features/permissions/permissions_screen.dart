@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hey_dane/app/core/theme/dane_colors.dart';
 import 'package:hey_dane/app/features/permissions/services/permission_center_service.dart';
@@ -331,7 +331,8 @@ class _PermissionsScreenState extends ConsumerState<PermissionsScreen>
                 title: item.title,
                 purpose: item.purpose,
                 featureDependency: item.featureDependency,
-                status: _statuses[item.permission] ?? DanePermissionState.denied,
+                status:
+                    _statuses[item.permission] ?? DanePermissionState.denied,
                 onAction: () => _requestRuntime(item.permission),
                 onManageSettings: () => openAppSettings(),
               ),

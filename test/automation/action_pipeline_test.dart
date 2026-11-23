@@ -29,7 +29,8 @@ class _FakeAutomationGateway implements NativeAutomationGateway {
 
 void main() {
   group('ActionEngine structured pipeline & security gates', () {
-    test('rejects arbitrary shell, root, or credential keys in AI proposals', () {
+    test('rejects arbitrary shell, root, or credential keys in AI proposals',
+        () {
       final engine = ActionEngine(gateway: _FakeAutomationGateway());
 
       expect(
@@ -71,7 +72,8 @@ void main() {
       expect(high.status, ActionExecutionStatus.awaitingConfirmation);
     });
 
-    test('blocks execution without explicit user confirmation on medium/high actions',
+    test(
+        'blocks execution without explicit user confirmation on medium/high actions',
         () async {
       final gateway = _FakeAutomationGateway();
       final engine = ActionEngine(gateway: gateway);
@@ -112,7 +114,8 @@ void main() {
       expect(gateway.calls, isEmpty);
     });
 
-    test('validates alarm bounds, SAF rename traversal, and HTTPS-only downloads',
+    test(
+        'validates alarm bounds, SAF rename traversal, and HTTPS-only downloads',
         () async {
       final gateway = _FakeAutomationGateway();
       final engine = ActionEngine(gateway: gateway);

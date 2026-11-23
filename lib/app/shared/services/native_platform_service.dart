@@ -46,7 +46,8 @@ class NativePlatformService {
     }
 
     try {
-      final result = await _channel.invokeMapMethod<String, dynamic>('getDeviceInfo');
+      final result =
+          await _channel.invokeMapMethod<String, dynamic>('getDeviceInfo');
       if (result == null) {
         return AndroidDeviceSnapshot.unavailable();
       }
@@ -57,7 +58,8 @@ class NativePlatformService {
         model: (result['model'] as String?) ?? 'Device',
         androidRelease: (result['release'] as String?) ?? 'Unknown',
         sdkInt: (result['sdkInt'] as int?) ?? 0,
-        packageName: (result['packageName'] as String?) ?? AppIdentity.packageId,
+        packageName:
+            (result['packageName'] as String?) ?? AppIdentity.packageId,
         isNativeConnected: true,
         lastBootMs: bootMs,
       );
@@ -90,7 +92,8 @@ class NativePlatformService {
       return false;
     }
     try {
-      final started = await _channel.invokeMethod<bool>('startVoiceForegroundService');
+      final started =
+          await _channel.invokeMethod<bool>('startVoiceForegroundService');
       return started ?? false;
     } on PlatformException {
       return false;
@@ -104,7 +107,8 @@ class NativePlatformService {
       return false;
     }
     try {
-      final stopped = await _channel.invokeMethod<bool>('stopVoiceForegroundService');
+      final stopped =
+          await _channel.invokeMethod<bool>('stopVoiceForegroundService');
       return stopped ?? false;
     } on PlatformException {
       return false;

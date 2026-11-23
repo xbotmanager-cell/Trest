@@ -55,7 +55,8 @@ class ForegroundPhraseWakeWordEngine implements WakeWordEngine {
   Future<WakeWordAvailability> checkAvailability() async {
     final perm = await _speech.ensureMicrophonePermission();
     return switch (perm) {
-      SpeechPermissionState.granted => WakeWordAvailability.foregroundActiveOnly,
+      SpeechPermissionState.granted =>
+        WakeWordAvailability.foregroundActiveOnly,
       SpeechPermissionState.denied ||
       SpeechPermissionState.permanentlyDenied =>
         WakeWordAvailability.microphoneDenied,

@@ -15,7 +15,8 @@ abstract class NativeAutomationGateway {
 
 class MethodChannelAutomationGateway implements NativeAutomationGateway {
   MethodChannelAutomationGateway({MethodChannel? channel})
-      : _channel = channel ?? const MethodChannel(AppIdentity.automationChannel);
+      : _channel =
+            channel ?? const MethodChannel(AppIdentity.automationChannel);
 
   final MethodChannel _channel;
 
@@ -36,7 +37,10 @@ class MethodChannelAutomationGateway implements NativeAutomationGateway {
     } on PlatformException catch (e) {
       return {'success': false, 'message': e.message ?? 'Native call failed.'};
     } on MissingPluginException {
-      return {'success': false, 'message': 'Automation channel not registered.'};
+      return {
+        'success': false,
+        'message': 'Automation channel not registered.'
+      };
     }
   }
 
@@ -46,7 +50,8 @@ class MethodChannelAutomationGateway implements NativeAutomationGateway {
       return const [];
     }
     try {
-      final list = await _channel.invokeListMethod<dynamic>('listLaunchableApps');
+      final list =
+          await _channel.invokeListMethod<dynamic>('listLaunchableApps');
       if (list == null) return const [];
       return list
           .whereType<Map<dynamic, dynamic>>()
@@ -97,10 +102,11 @@ class ActionEngine {
         }
       }
 
-      final matchedType = DaneActionType.values.cast<DaneActionType?>().firstWhere(
-            (t) => t?.name == typeName,
-            orElse: () => null,
-          );
+      final matchedType =
+          DaneActionType.values.cast<DaneActionType?>().firstWhere(
+                (t) => t?.name == typeName,
+                orElse: () => null,
+              );
       if (matchedType == null) return null;
 
       return buildAction(type: matchedType, parameters: params);
@@ -229,7 +235,12 @@ class ActionEngine {
       case DaneActionType.setAlarm:
         final hour = p['hour'];
         final minute = p['minute'];
-        if (hour is! int || minute is! int || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+        if (hour is! int ||
+            minute is! int ||
+            hour < 0 ||
+            hour > 23 ||
+            minute < 0 ||
+            minute > 59) {
           return 'Alarm hour must be 0..23 and minute 0..59.';
         }
       case DaneActionType.setTimer:
@@ -318,8 +329,14 @@ class ActionEngine {
 
     final (method, args) = switch (action.type) {
       DaneActionType.launchApp => ('launchApp', action.parameters),
-      DaneActionType.openSystemSetting => ('openSettingPanel', action.parameters),
-      DaneActionType.accessibilityAction => ('performAccessibilityAction', action.parameters),
+      DaneActionType.openSystemSetting => (
+          'openSettingPanel',
+          action.parameters
+        ),
+      DaneActionType.accessibilityAction => (
+          'performAccessibilityAction',
+          action.parameters
+        ),
       DaneActionType.setAlarm => ('setAlarm', action.parameters),
       DaneActionType.setTimer => ('setTimer', action.parameters),
       DaneActionType.showAlarms => ('showAlarms', const <String, dynamic>{}),
@@ -329,12 +346,21 @@ class ActionEngine {
       DaneActionType.sendSms => ('sendSms', action.parameters),
       DaneActionType.shareText => ('shareText', action.parameters),
       DaneActionType.handoffWhatsApp => ('handoffWhatsApp', action.parameters),
-      DaneActionType.pickFileSaf => ('pickDocumentSaf', const <String, dynamic>{}),
+      DaneActionType.pickFileSaf => (
+          'pickDocumentSaf',
+          const <String, dynamic>{}
+        ),
       DaneActionType.renameFileSaf => ('renameDocumentSaf', action.parameters),
       DaneActionType.deleteFileSaf => ('deleteDocumentSaf', action.parameters),
-      DaneActionType.browseMedia => ('queryRecentMedia', const <String, dynamic>{}),
+      DaneActionType.browseMedia => (
+          'queryRecentMedia',
+          const <String, dynamic>{}
+        ),
       DaneActionType.downloadHttps => ('enqueueDownload', action.parameters),
-      DaneActionType.lockDeviceAdmin => ('lockDeviceAdmin', const <String, dynamic>{}),
+      DaneActionType.lockDeviceAdmin => (
+          'lockDeviceAdmin',
+          const <String, dynamic>{}
+        ),
     };
 
     final nativeResult = await _gateway.invokeAction(method, args);
@@ -342,8 +368,11 @@ class ActionEngine {
     final message = (nativeResult['message'] ?? '').toString();
 
     return action.copyWith(
-      status: success ? ActionExecutionStatus.succeeded : ActionExecutionStatus.failed,
-      resultMessage: message.isEmpty ? (success ? 'Completed.' : 'Failed.') : message,
+      status: success
+          ? ActionExecutionStatus.succeeded
+          : ActionExecutionStatus.failed,
+      resultMessage:
+          message.isEmpty ? (success ? 'Completed.' : 'Failed.') : message,
       resultData: nativeResult,
     );
   }

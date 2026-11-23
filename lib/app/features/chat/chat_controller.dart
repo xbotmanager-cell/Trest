@@ -28,7 +28,8 @@ class ChatController extends StateNotifier<bool> {
     final existingTurns = _ref.read(conversationTurnsProvider);
     final history = existingTurns
         .where((t) => !t.isError && t.text.trim().isNotEmpty)
-        .map((t) => AiMessageInput(role: t.isUser ? 'user' : 'assistant', text: t.text))
+        .map((t) =>
+            AiMessageInput(role: t.isUser ? 'user' : 'assistant', text: t.text))
         .toList();
 
     final userTurn = ChatTurn(
@@ -88,7 +89,8 @@ class ChatController extends StateNotifier<bool> {
     final history = allTurns
         .take(idx)
         .where((t) => !t.isError && t.text.trim().isNotEmpty)
-        .map((t) => AiMessageInput(role: t.isUser ? 'user' : 'assistant', text: t.text))
+        .map((t) =>
+            AiMessageInput(role: t.isUser ? 'user' : 'assistant', text: t.text))
         .toList();
 
     final updated = List<ChatTurn>.from(allTurns);
@@ -207,13 +209,16 @@ class ChatController extends StateNotifier<bool> {
 
       if (latestUsage != null) {
         final total = _ref.read(sessionTokenUsageProvider);
-        _ref.read(sessionTokenUsageProvider.notifier).state = total + latestUsage;
+        _ref.read(sessionTokenUsageProvider.notifier).state =
+            total + latestUsage;
       }
 
       _updateTurn(
         assistantId,
         (t) => t.copyWith(
-          text: buffer.isEmpty ? 'No response returned by provider.' : buffer.toString(),
+          text: buffer.isEmpty
+              ? 'No response returned by provider.'
+              : buffer.toString(),
           isError: buffer.isEmpty,
           isStreaming: false,
           usage: latestUsage,
@@ -255,6 +260,7 @@ class ChatController extends StateNotifier<bool> {
   }
 }
 
-final chatControllerProvider = StateNotifierProvider<ChatController, bool>((ref) {
+final chatControllerProvider =
+    StateNotifierProvider<ChatController, bool>((ref) {
   return ChatController(ref);
 });

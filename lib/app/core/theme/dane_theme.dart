@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hey_dane/app/core/theme/dane_colors.dart';
 
 class DaneTheme {
@@ -48,7 +48,8 @@ class DaneTheme {
         filled: true,
         fillColor: DaneColors.surfaceGlass.withValues(alpha: 0.85),
         hintStyle: const TextStyle(color: DaneColors.textSecondaryDark),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: DaneColors.borderDark),
@@ -69,7 +70,8 @@ class DaneTheme {
           if (states.contains(WidgetState.selected)) {
             return const IconThemeData(color: DaneColors.cyanCore, size: 22);
           }
-          return const IconThemeData(color: DaneColors.textSecondaryDark, size: 22);
+          return const IconThemeData(
+              color: DaneColors.textSecondaryDark, size: 22);
         }),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
@@ -133,7 +135,8 @@ class DaneTheme {
         filled: true,
         fillColor: DaneColors.surfaceLight,
         hintStyle: const TextStyle(color: DaneColors.textSecondaryLight),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: DaneColors.borderLight),
@@ -144,7 +147,8 @@ class DaneTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: DaneColors.electricBlueDeep, width: 1.5),
+          borderSide:
+              const BorderSide(color: DaneColors.electricBlueDeep, width: 1.5),
         ),
       ),
     );

@@ -458,12 +458,10 @@ class GeminiProvider implements AiProvider {
     }
 
     try {
-      final response = await _client
-          .get(
-            Uri.parse('$_googleApiBase/models/$model'),
-            headers: {'x-goog-api-key': key},
-          )
-          .timeout(const Duration(seconds: 12));
+      final response = await _client.get(
+        Uri.parse('$_googleApiBase/models/$model'),
+        headers: {'x-goog-api-key': key},
+      ).timeout(const Duration(seconds: 12));
       sw.stop();
       if (response.statusCode == 200) {
         return ProviderConnectionStatus(

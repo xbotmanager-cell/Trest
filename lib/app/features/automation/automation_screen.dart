@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hey_dane/app/core/theme/dane_colors.dart';
 import 'package:hey_dane/app/features/automation/domain/dane_action.dart';
@@ -203,7 +203,8 @@ class _AutomationScreenState extends ConsumerState<AutomationScreen> {
     final seconds = int.tryParse(controller.text.trim());
     controller.dispose();
     if (confirmed != true || seconds == null) return;
-    final action = ref.read(alarmServiceProvider).proposeTimer(seconds: seconds);
+    final action =
+        ref.read(alarmServiceProvider).proposeTimer(seconds: seconds);
     await _submitAction(action);
   }
 
@@ -489,7 +490,9 @@ class _AutomationScreenState extends ConsumerState<AutomationScreen> {
                         onPressed: _loadingApps ? null : _loadApps,
                         icon: const Icon(Icons.apps_rounded, size: 18),
                         label: Text(
-                          _loadingApps ? 'Loading Apps...' : 'List Installed Apps',
+                          _loadingApps
+                              ? 'Loading Apps...'
+                              : 'List Installed Apps',
                         ),
                       ),
                       for (final panel in const [
@@ -527,7 +530,8 @@ class _AutomationScreenState extends ConsumerState<AutomationScreen> {
                             contentPadding: EdgeInsets.zero,
                             title: Text(label),
                             subtitle: Text(pkg),
-                            trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                            trailing:
+                                const Icon(Icons.open_in_new_rounded, size: 18),
                             onTap: () => _submitAction(
                               engine.buildAction(
                                 type: DaneActionType.launchApp,
@@ -556,7 +560,12 @@ class _AutomationScreenState extends ConsumerState<AutomationScreen> {
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      for (final act in const ['back', 'home', 'recents', 'notifications'])
+                      for (final act in const [
+                        'back',
+                        'home',
+                        'recents',
+                        'notifications'
+                      ])
                         OutlinedButton(
                           onPressed: () => _submitAction(
                             engine.buildAction(
@@ -641,7 +650,8 @@ class _AutomationScreenState extends ConsumerState<AutomationScreen> {
                         child: const Text('Propose Timer'),
                       ),
                       OutlinedButton(
-                        onPressed: () => _submitAction(alarms.proposeShowAlarms()),
+                        onPressed: () =>
+                            _submitAction(alarms.proposeShowAlarms()),
                         child: const Text('Show Alarms'),
                       ),
                       OutlinedButton(
@@ -653,11 +663,13 @@ class _AutomationScreenState extends ConsumerState<AutomationScreen> {
                         child: const Text('Place Call'),
                       ),
                       OutlinedButton(
-                        onPressed: () => _promptMessageAction(mode: 'sms_compose'),
+                        onPressed: () =>
+                            _promptMessageAction(mode: 'sms_compose'),
                         child: const Text('Compose SMS'),
                       ),
                       OutlinedButton(
-                        onPressed: () => _promptMessageAction(mode: 'sms_direct'),
+                        onPressed: () =>
+                            _promptMessageAction(mode: 'sms_direct'),
                         child: const Text('Send SMS'),
                       ),
                       OutlinedButton(
@@ -684,11 +696,13 @@ class _AutomationScreenState extends ConsumerState<AutomationScreen> {
                     runSpacing: 8,
                     children: [
                       FilledButton.tonal(
-                        onPressed: () => _submitAction(files.proposePickFileSaf()),
+                        onPressed: () =>
+                            _submitAction(files.proposePickFileSaf()),
                         child: const Text('Pick Document (SAF)'),
                       ),
                       OutlinedButton(
-                        onPressed: () => _submitAction(files.proposeBrowseMedia()),
+                        onPressed: () =>
+                            _submitAction(files.proposeBrowseMedia()),
                         child: const Text('Browse MediaStore'),
                       ),
                       OutlinedButton(

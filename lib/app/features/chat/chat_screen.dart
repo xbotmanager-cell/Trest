@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hey_dane/app/core/constants/app_identity.dart';
@@ -100,10 +100,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                               padding: const EdgeInsets.all(14),
                               borderRadius: 18,
                               borderColor: turn.isError
-                                  ? DaneColors.alertCrimson.withValues(alpha: 0.7)
+                                  ? DaneColors.alertCrimson
+                                      .withValues(alpha: 0.7)
                                   : turn.isUser
-                                      ? DaneColors.cyanCore.withValues(alpha: 0.4)
-                                      : DaneColors.electricBlue.withValues(alpha: 0.35),
+                                      ? DaneColors.cyanCore
+                                          .withValues(alpha: 0.4)
+                                      : DaneColors.electricBlue
+                                          .withValues(alpha: 0.35),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -126,7 +129,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                                     ? DaneColors.alertCrimson
                                                     : turn.isUser
                                                         ? DaneColors.cyanCore
-                                                        : DaneColors.electricBlue,
+                                                        : DaneColors
+                                                            .electricBlue,
                                                 fontWeight: FontWeight.w600,
                                               ),
                                         ),
@@ -146,7 +150,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               const SnackBar(
-                                                content: Text('Copied to clipboard'),
+                                                content:
+                                                    Text('Copied to clipboard'),
                                                 duration: Duration(seconds: 2),
                                               ),
                                             );
@@ -182,7 +187,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                       onPressed: () => ref
                                           .read(chatControllerProvider.notifier)
                                           .retryTurn(turn),
-                                      icon: const Icon(Icons.refresh_rounded, size: 16),
+                                      icon: const Icon(Icons.refresh_rounded,
+                                          size: 16),
                                       label: const Text('Retry'),
                                     ),
                                   ],

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hey_dane/app/core/theme/dane_colors.dart';
 import 'package:hey_dane/app/features/memory/services/memory_vault.dart';
@@ -145,7 +145,8 @@ class _MemoryScreenState extends ConsumerState<MemoryScreen> {
                     children: [
                       const Text(
                         'Encrypted Memory Vault',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       FilledButton.tonalIcon(
                         onPressed: _addPreference,

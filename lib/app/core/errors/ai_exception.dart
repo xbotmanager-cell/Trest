@@ -26,5 +26,6 @@ class AiException implements Exception {
   final bool retryable;
 
   @override
-  String toString() => 'AiException(${kind.name}, status=$statusCode): $message';
+  String toString() =>
+      'AiException(${kind.name}, status=$statusCode): $message';
 }

@@ -18,7 +18,8 @@ class _MemoryKeyVault implements KeyVaultStore {
   String? _proxyUrl;
 
   @override
-  Future<void> deleteKey(AiProviderKind provider) async => _keys.remove(provider);
+  Future<void> deleteKey(AiProviderKind provider) async =>
+      _keys.remove(provider);
 
   @override
   Future<String?> readKey(AiProviderKind provider) async => _keys[provider];
@@ -77,7 +78,8 @@ void main() {
       expect(usageDelta.usage!.totalTokens, 14);
     });
 
-    test('retries transient 503 error and succeeds on second attempt', () async {
+    test('retries transient 503 error and succeeds on second attempt',
+        () async {
       var calls = 0;
       final client = MockClient.streaming((request, bodyStream) async {
         calls++;
@@ -89,7 +91,8 @@ void main() {
         }
         return http.StreamedResponse(
           Stream.value(
-            utf8.encode('data: {"choices":[{"delta":{"content":"Recovered"}}]}\n\n'),
+            utf8.encode(
+                'data: {"choices":[{"delta":{"content":"Recovered"}}]}\n\n'),
           ),
           200,
         );
@@ -124,11 +127,13 @@ void main() {
         final rawBody = await bodyStream.bytesToString();
         final decoded = jsonDecode(rawBody) as Map<String, dynamic>;
         final contents = decoded['contents'] as List<dynamic>;
-        final parts = (contents.last as Map<String, dynamic>)['parts'] as List<dynamic>;
+        final parts =
+            (contents.last as Map<String, dynamic>)['parts'] as List<dynamic>;
         expect(parts.length, 2);
         expect(parts.first['inlineData']['mimeType'], 'image/png');
 
-        final sse = 'data: {"candidates":[{"content":{"parts":[{"text":"Image analyzed."}]}}],"usageMetadata":{"promptTokenCount":25,"candidatesTokenCount":5,"totalTokenCount":30}}\n\n';
+        const sse =
+            'data: {"candidates":[{"content":{"parts":[{"text":"Image analyzed."}]}}],"usageMetadata":{"promptTokenCount":25,"candidatesTokenCount":5,"totalTokenCount":30}}\n\n';
         return http.StreamedResponse(
           Stream.value(utf8.encode(sse)),
           200,
@@ -179,7 +184,8 @@ void main() {
   });
 
   group('AiRouterService fallback', () {
-    test('falls back to OpenRouter when primary provider fails with 401', () async {
+    test('falls back to OpenRouter when primary provider fails with 401',
+        () async {
       final vault = _MemoryKeyVault();
       await vault.writeKey(AiProviderKind.groq, 'bad_key');
       await vault.writeKey(AiProviderKind.openRouter, 'or_valid_key');
@@ -209,7 +215,8 @@ void main() {
             retryPolicy: const RetryPolicy(maxAttempts: 1),
           ),
           AiProviderKind.gemini: GeminiProvider(),
-          AiProviderKind.openRouter: OpenRouterProvider(client: openRouterClient),
+          AiProviderKind.openRouter:
+              OpenRouterProvider(client: openRouterClient),
         },
         keyVault: vault,
       );

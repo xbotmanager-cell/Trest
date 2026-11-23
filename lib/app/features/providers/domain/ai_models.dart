@@ -121,7 +121,8 @@ class ProviderConfiguration {
   final String? proxyBaseUrl;
   final bool enableFallback;
 
-  bool get canUseProxy => proxyBaseUrl != null && proxyBaseUrl!.trim().isNotEmpty;
+  bool get canUseProxy =>
+      proxyBaseUrl != null && proxyBaseUrl!.trim().isNotEmpty;
 }
 
 class CancellationToken {

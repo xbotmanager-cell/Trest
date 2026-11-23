@@ -47,7 +47,8 @@ class SpecialAccessSnapshot {
 
 class PermissionCenterService {
   PermissionCenterService({MethodChannel? channel})
-      : _channel = channel ?? const MethodChannel(AppIdentity.permissionsChannel);
+      : _channel =
+            channel ?? const MethodChannel(AppIdentity.permissionsChannel);
 
   final MethodChannel _channel;
 

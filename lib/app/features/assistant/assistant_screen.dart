@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hey_dane/app/core/constants/app_identity.dart';
@@ -229,7 +229,8 @@ class _AssistantScreenState extends ConsumerState<AssistantScreen> {
                               padding: const EdgeInsets.all(14),
                               borderRadius: 16,
                               borderColor: turn.isError
-                                  ? DaneColors.alertCrimson.withValues(alpha: 0.6)
+                                  ? DaneColors.alertCrimson
+                                      .withValues(alpha: 0.6)
                                   : null,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

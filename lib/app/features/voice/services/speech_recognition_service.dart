@@ -93,8 +93,8 @@ class DeviceSpeechRecognitionAdapter implements SpeechRecognitionAdapter {
     required void Function(double normalizedLevel) onSoundLevel,
   }) async {
     await _stt.listen(
-      localeId: localeId,
       listenOptions: SpeechListenOptions(
+        localeId: localeId,
         listenMode: ListenMode.dictation,
         partialResults: true,
         cancelOnError: true,

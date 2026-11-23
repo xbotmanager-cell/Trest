@@ -46,9 +46,8 @@ class SharedPrefsAiPreferencesStore implements AiPreferencesStore {
   @override
   Future<AiRoutingPreferences> load() async {
     final prefs = await SharedPreferences.getInstance();
-    final defaultKind =
-        _parseKind(prefs.getString(_defaultProviderKey)) ??
-            AiProviderKind.gemini;
+    final defaultKind = _parseKind(prefs.getString(_defaultProviderKey)) ??
+        AiProviderKind.gemini;
     final fallbackEnabled = prefs.getBool(_fallbackEnabledKey) ?? true;
 
     final rawOrder = prefs.getStringList(_fallbackOrderKey);

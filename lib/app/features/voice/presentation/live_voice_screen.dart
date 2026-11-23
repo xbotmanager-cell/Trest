@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hey_dane/app/core/constants/app_identity.dart';
@@ -44,8 +44,9 @@ class _LiveVoiceScreenState extends ConsumerState<LiveVoiceScreen> {
     final activeModel = models[provider] ?? provider.defaultModel;
 
     final statusHint = switch (voiceState.orbState) {
-      DaneOrbState.idle =>
-        voiceState.isMicMuted ? 'Microphone muted · Tap orb or unmute' : 'Tap the orb to speak',
+      DaneOrbState.idle => voiceState.isMicMuted
+          ? 'Microphone muted · Tap orb or unmute'
+          : 'Tap the orb to speak',
       DaneOrbState.listening => 'Listening · Speak naturally',
       DaneOrbState.thinking => 'Thinking via ${provider.label}...',
       DaneOrbState.speaking => 'Speaking · Tap orb to interrupt',
@@ -128,7 +129,9 @@ class _LiveVoiceScreenState extends ConsumerState<LiveVoiceScreen> {
                   HolographicOrb(
                     state: voiceState.orbState,
                     audioLevel: voiceState.audioLevel,
-                    size: MediaQuery.sizeOf(context).shortestSide >= 600 ? 290 : 256,
+                    size: MediaQuery.sizeOf(context).shortestSide >= 600
+                        ? 290
+                        : 256,
                     onTap: () => controller.handleOrbTap(),
                   ),
 
@@ -156,14 +159,16 @@ class _LiveVoiceScreenState extends ConsumerState<LiveVoiceScreen> {
 
                   // Live Transcription & Spoken Response Area
                   ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 640, maxHeight: 200),
+                    constraints:
+                        const BoxConstraints(maxWidth: 640, maxHeight: 200),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           if (voiceState.errorMessage != null)
                             GlassSurface(
-                              borderColor: DaneColors.alertCrimson.withValues(alpha: 0.7),
+                              borderColor: DaneColors.alertCrimson
+                                  .withValues(alpha: 0.7),
                               padding: const EdgeInsets.all(14),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,9 +192,9 @@ class _LiveVoiceScreenState extends ConsumerState<LiveVoiceScreen> {
                                         onPressed: controller.returnToIdle,
                                         child: const Text('Idle'),
                                       ),
-                                      OutlinedButton(
+                                      const OutlinedButton(
                                         onPressed: openAppSettings,
-                                        child: const Text('App Settings'),
+                                        child: Text('App Settings'),
                                       ),
                                     ],
                                   ),
@@ -224,7 +229,8 @@ class _LiveVoiceScreenState extends ConsumerState<LiveVoiceScreen> {
                                   if (voiceState.liveTranscript.isNotEmpty &&
                                       voiceState.assistantResponse.isNotEmpty)
                                     const SizedBox(height: 10),
-                                  if (voiceState.assistantResponse.isNotEmpty) ...[
+                                  if (voiceState
+                                      .assistantResponse.isNotEmpty) ...[
                                     const Text(
                                       AppIdentity.assistantName,
                                       style: TextStyle(
@@ -255,12 +261,15 @@ class _LiveVoiceScreenState extends ConsumerState<LiveVoiceScreen> {
                   // Bottom Ergonomic Control Dock
                   GlassSurface(
                     borderRadius: 28,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton.filledTonal(
-                          tooltip: voiceState.isMicMuted ? 'Unmute microphone' : 'Mute microphone',
+                          tooltip: voiceState.isMicMuted
+                              ? 'Unmute microphone'
+                              : 'Mute microphone',
                           onPressed: controller.toggleMicMute,
                           icon: Icon(
                             voiceState.isMicMuted

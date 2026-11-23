@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hey_dane/app/core/security/secure_key_vault.dart';
 import 'package:hey_dane/app/features/alarms/alarm_service.dart';
@@ -115,7 +115,8 @@ final aiRouterServiceProvider = Provider<AiRouterService>((ref) {
   );
 });
 
-final speechRecognitionAdapterProvider = Provider<SpeechRecognitionAdapter>((ref) {
+final speechRecognitionAdapterProvider =
+    Provider<SpeechRecognitionAdapter>((ref) {
   return DeviceSpeechRecognitionAdapter();
 });
 
@@ -139,7 +140,8 @@ final liveVoiceControllerProvider =
   );
 });
 
-final deviceSnapshotProvider = FutureProvider<AndroidDeviceSnapshot>((ref) async {
+final deviceSnapshotProvider =
+    FutureProvider<AndroidDeviceSnapshot>((ref) async {
   final service = ref.watch(nativePlatformServiceProvider);
   return service.getDeviceSnapshot();
 });
@@ -173,7 +175,8 @@ final aiPreferencesStoreProvider = Provider<AiPreferencesStore>((ref) {
 });
 
 final providerStatusesProvider =
-    StateProvider<Map<AiProviderKind, ProviderConnectionStatus>>((ref) => const {});
+    StateProvider<Map<AiProviderKind, ProviderConnectionStatus>>(
+        (ref) => const {});
 
 final sessionTokenUsageProvider = StateProvider<TokenUsage>(
   (ref) => const TokenUsage(),
@@ -189,7 +192,8 @@ final conversationTurnsProvider = StateProvider<List<ChatTurn>>(
   (ref) => const <ChatTurn>[],
 );
 
-final permissionCenterServiceProvider = Provider<PermissionCenterService>((ref) {
+final permissionCenterServiceProvider =
+    Provider<PermissionCenterService>((ref) {
   return PermissionCenterService();
 });
 

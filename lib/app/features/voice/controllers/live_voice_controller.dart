@@ -38,7 +38,9 @@ class LiveVoiceController extends StateNotifier<VoiceSessionState> {
   }
 
   Future<void> startSession() async {
-    if (state.isSessionActive && state.orbState == DaneOrbState.listening) return;
+    if (state.isSessionActive && state.orbState == DaneOrbState.listening) {
+      return;
+    }
 
     await _wakeWord.disarm();
     state = state.copyWith(
@@ -128,7 +130,8 @@ class LiveVoiceController extends StateNotifier<VoiceSessionState> {
     await _speech.startListening(
       localeId: localeId,
       onSoundLevel: (normalized) {
-        if (!state.isSessionActive || state.orbState != DaneOrbState.listening) {
+        if (!state.isSessionActive ||
+            state.orbState != DaneOrbState.listening) {
           return;
         }
         state = state.copyWith(audioLevel: normalized);
@@ -168,7 +171,8 @@ class LiveVoiceController extends StateNotifier<VoiceSessionState> {
     final existingTurns = _ref.read(conversationTurnsProvider);
     final history = existingTurns
         .where((t) => !t.isError && t.text.trim().isNotEmpty)
-        .map((t) => AiMessageInput(role: t.isUser ? 'user' : 'assistant', text: t.text))
+        .map((t) =>
+            AiMessageInput(role: t.isUser ? 'user' : 'assistant', text: t.text))
         .toList();
 
     final userTurn = ChatTurn(
@@ -242,9 +246,11 @@ class LiveVoiceController extends StateNotifier<VoiceSessionState> {
       }
 
       final finalReply = buffer.toString().trim();
+      if (_disposed) return;
       if (latestUsage != null) {
         final total = _ref.read(sessionTokenUsageProvider);
-        _ref.read(sessionTokenUsageProvider.notifier).state = total + latestUsage;
+        _ref.read(sessionTokenUsageProvider.notifier).state =
+            total + latestUsage;
       }
 
       _updateChatTurn(
@@ -269,7 +275,7 @@ class LiveVoiceController extends StateNotifier<VoiceSessionState> {
 
       await _speakResponse(finalReply);
     } on AiException catch (err) {
-      if (err.kind == AiErrorKind.cancelled) return;
+      if (err.kind == AiErrorKind.cancelled || _disposed) return;
       _updateChatTurn(
         assistantId,
         (t) => t.copyWith(text: err.message, isError: true, isStreaming: false),
@@ -281,6 +287,7 @@ class LiveVoiceController extends StateNotifier<VoiceSessionState> {
       );
       _syncOrbState(DaneOrbState.error);
     } catch (err) {
+      if (_disposed) return;
       final msg = 'Voice request failed: $err';
       _updateChatTurn(
         assistantId,
@@ -326,7 +333,8 @@ class LiveVoiceController extends StateNotifier<VoiceSessionState> {
         }
         _speakPulseStep += 1;
         // Modulate orb amplitude cleanly from genuine TTS word progress callbacks.
-        final cadence = 0.42 + 0.45 * ((math.sin(_speakPulseStep * 1.15) + 1) / 2);
+        final cadence =
+            0.42 + 0.45 * ((math.sin(_speakPulseStep * 1.15) + 1) / 2);
         state = state.copyWith(audioLevel: cadence.clamp(0.25, 0.95));
       },
       onComplete: () {
@@ -419,7 +427,8 @@ class LiveVoiceController extends StateNotifier<VoiceSessionState> {
     await _tts.configure(locale: state.locale, speechRate: clamped);
   }
 
-  Future<void> toggleWakeWord(bool enable, {void Function()? onTriggered}) async {
+  Future<void> toggleWakeWord(bool enable,
+      {void Function()? onTriggered}) async {
     if (!enable) {
       await _wakeWord.disarm();
       _ref.read(wakeWordEnabledProvider.notifier).state = false;
@@ -436,7 +445,8 @@ class LiveVoiceController extends StateNotifier<VoiceSessionState> {
         _ref.read(wakeWordEnabledProvider.notifier).state = false;
         state = state.copyWith(
           wakeWordArmed: false,
-          wakeWordStatusNote: ForegroundPhraseWakeWordEngine.confirmationGreeting,
+          wakeWordStatusNote:
+              ForegroundPhraseWakeWordEngine.confirmationGreeting,
         );
         onTriggered?.call();
       },
@@ -473,6 +483,7 @@ class LiveVoiceController extends StateNotifier<VoiceSessionState> {
   }
 
   void _updateChatTurn(String id, ChatTurn Function(ChatTurn) transform) {
+    if (_disposed) return;
     final current = _ref.read(conversationTurnsProvider);
     _ref.read(conversationTurnsProvider.notifier).state = [
       for (final t in current)

@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'dart:ui' show lerpDouble;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hey_dane/app/core/theme/dane_colors.dart';
 import 'package:hey_dane/app/features/hologram/widgets/holographic_d_logo.dart';
 import 'package:hey_dane/app/shared/providers/app_state_provider.dart';
@@ -60,7 +60,8 @@ class _HolographicOrbState extends State<HolographicOrb>
         child: AnimatedBuilder(
           animation: _controller,
           builder: (context, _) {
-            _smoothedLevel = lerpDouble(_smoothedLevel, targetLevel, 0.24) ?? targetLevel;
+            _smoothedLevel =
+                lerpDouble(_smoothedLevel, targetLevel, 0.24) ?? targetLevel;
 
             final t = _controller.value;
             final baseSpeed = switch (widget.state) {
@@ -76,7 +77,8 @@ class _HolographicOrbState extends State<HolographicOrb>
               DaneOrbState.idle => 0.97 + 0.025 * math.sin(phase),
               DaneOrbState.listening => 0.96 + (_smoothedLevel * 0.11),
               DaneOrbState.thinking => 0.95 + 0.045 * math.sin(phase * 1.5),
-              DaneOrbState.speaking => 0.97 + (_smoothedLevel * 0.12) + 0.02 * math.sin(phase),
+              DaneOrbState.speaking =>
+                0.97 + (_smoothedLevel * 0.12) + 0.02 * math.sin(phase),
               DaneOrbState.error => 0.98 + 0.015 * math.sin(phase * 2),
             };
 
@@ -99,7 +101,8 @@ class _HolographicOrbState extends State<HolographicOrb>
                     if (widget.showCenterCore)
                       IgnorePointer(
                         child: Opacity(
-                          opacity: widget.state == DaneOrbState.error ? 0.55 : 0.82,
+                          opacity:
+                              widget.state == DaneOrbState.error ? 0.55 : 0.82,
                           child: HolographicDLogo(
                             size: widget.size * 0.34,
                             rotationRadians: -phase * 0.28,
@@ -300,7 +303,8 @@ class _HolographicWaveOrbPainter extends CustomPainter {
       final theta = (i / sampleCount) * math.pi * 2;
       final primaryWave = math.sin(theta * harmonics + phaseShift);
       final modulation = math.cos(theta * (harmonics - 2) - phaseShift * 0.7);
-      final r = baseRadius + amplitude * (0.68 * primaryWave + 0.32 * modulation);
+      final r =
+          baseRadius + amplitude * (0.68 * primaryWave + 0.32 * modulation);
       final x = center.dx + math.cos(theta) * r;
       final y = center.dy + math.sin(theta) * r;
       if (i == 0) {

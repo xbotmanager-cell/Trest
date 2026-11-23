@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hey_dane/app/core/errors/ai_exception.dart';
+import 'package:hey_dane/app/core/security/secure_key_vault.dart';
 import 'package:hey_dane/app/features/hologram/widgets/holographic_orb.dart';
 import 'package:hey_dane/app/features/providers/domain/ai_models.dart';
 import 'package:hey_dane/app/features/providers/domain/ai_provider.dart';
@@ -11,6 +12,33 @@ import 'package:hey_dane/app/features/voice/services/speech_recognition_service.
 import 'package:hey_dane/app/features/voice/services/tts_service.dart';
 import 'package:hey_dane/app/features/voice/services/wake_word_service.dart';
 import 'package:hey_dane/app/shared/providers/app_state_provider.dart';
+
+class _TestKeyVault implements KeyVaultStore {
+  final Map<AiProviderKind, String> _keys = {
+    AiProviderKind.gemini: 'test_gemini_key',
+  };
+  String? _proxyUrl;
+
+  @override
+  Future<void> deleteKey(AiProviderKind provider) async =>
+      _keys.remove(provider);
+
+  @override
+  Future<String?> readKey(AiProviderKind provider) async => _keys[provider];
+
+  @override
+  Future<String?> readProxyBaseUrl() async => _proxyUrl;
+
+  @override
+  Future<void> writeKey(AiProviderKind provider, String apiKey) async {
+    _keys[provider] = apiKey;
+  }
+
+  @override
+  Future<void> writeProxyBaseUrl(String url) async {
+    _proxyUrl = url;
+  }
+}
 
 class _FakeSpeechAdapter implements SpeechRecognitionAdapter {
   SpeechPermissionState permission = SpeechPermissionState.granted;
@@ -24,7 +52,8 @@ class _FakeSpeechAdapter implements SpeechRecognitionAdapter {
   void Function(double level)? _onSoundLevel;
 
   @override
-  Future<SpeechPermissionState> ensureMicrophonePermission() async => permission;
+  Future<SpeechPermissionState> ensureMicrophonePermission() async =>
+      permission;
 
   @override
   Future<bool> initialize({
@@ -37,7 +66,8 @@ class _FakeSpeechAdapter implements SpeechRecognitionAdapter {
   }
 
   @override
-  Future<String?> resolveLocaleId(VoiceLocaleOption preferred) async => preferred.bcp47;
+  Future<String?> resolveLocaleId(VoiceLocaleOption preferred) async =>
+      preferred.bcp47;
 
   @override
   Future<void> startListening({
@@ -190,11 +220,14 @@ ProviderContainer _createVoiceContainer({
 }) {
   return ProviderContainer(
     overrides: [
+      keyVaultProvider.overrideWithValue(_TestKeyVault()),
       speechRecognitionAdapterProvider.overrideWithValue(speech),
       ttsAdapterProvider.overrideWithValue(tts),
       aiProvidersMapProvider.overrideWithValue({
-        AiProviderKind.gemini: _FakeAiProvider(AiProviderKind.gemini, shouldError: aiError),
-        AiProviderKind.groq: _FakeAiProvider(AiProviderKind.groq, shouldError: aiError),
+        AiProviderKind.gemini:
+            _FakeAiProvider(AiProviderKind.gemini, shouldError: aiError),
+        AiProviderKind.groq:
+            _FakeAiProvider(AiProviderKind.groq, shouldError: aiError),
         AiProviderKind.openRouter:
             _FakeAiProvider(AiProviderKind.openRouter, shouldError: aiError),
       }),
@@ -204,7 +237,9 @@ ProviderContainer _createVoiceContainer({
 
 void main() {
   group('LiveVoiceController states & hardware edge cases', () {
-    test('transitions listening -> thinking -> speaking -> idle with real AI + TTS', () async {
+    test(
+        'transitions listening -> thinking -> speaking -> idle with real AI + TTS',
+        () async {
       final speech = _FakeSpeechAdapter();
       final tts = _FakeTtsAdapter();
       final container = _createVoiceContainer(speech: speech, tts: tts);
@@ -213,7 +248,8 @@ void main() {
       final controller = container.read(liveVoiceControllerProvider.notifier);
       await controller.startSession();
 
-      expect(container.read(liveVoiceControllerProvider).orbState, DaneOrbState.listening);
+      expect(container.read(liveVoiceControllerProvider).orbState,
+          DaneOrbState.listening);
       speech.emitSound(0.72);
       expect(container.read(liveVoiceControllerProvider).audioLevel, 0.72);
 
@@ -226,15 +262,18 @@ void main() {
       expect(tts.lastSpoken, 'Alarm set for 6:00 AM.');
 
       tts.emitProgress(0.5);
-      expect(container.read(liveVoiceControllerProvider).audioLevel, greaterThan(0.0));
+      expect(container.read(liveVoiceControllerProvider).audioLevel,
+          greaterThan(0.0));
 
       tts.emitComplete();
-      expect(container.read(liveVoiceControllerProvider).orbState, DaneOrbState.idle);
+      expect(container.read(liveVoiceControllerProvider).orbState,
+          DaneOrbState.idle);
       expect(container.read(conversationTurnsProvider).length, 2);
     });
 
     test('handles microphone denial with recognizable error state', () async {
-      final speech = _FakeSpeechAdapter()..permission = SpeechPermissionState.denied;
+      final speech = _FakeSpeechAdapter()
+        ..permission = SpeechPermissionState.denied;
       final tts = _FakeTtsAdapter();
       final container = _createVoiceContainer(speech: speech, tts: tts);
       addTearDown(container.dispose);
@@ -246,7 +285,9 @@ void main() {
       expect(state.errorMessage, contains('Microphone permission'));
     });
 
-    test('supports voice interruption (barge-in) while speaking and clean endSession', () async {
+    test(
+        'supports voice interruption (barge-in) while speaking and clean endSession',
+        () async {
       final speech = _FakeSpeechAdapter();
       final tts = _FakeTtsAdapter();
       final container = _createVoiceContainer(speech: speech, tts: tts);
@@ -256,12 +297,14 @@ void main() {
       await controller.startSession();
       await controller.submitUtteranceForTest('Hello Dane');
 
-      expect(container.read(liveVoiceControllerProvider).orbState, DaneOrbState.speaking);
+      expect(container.read(liveVoiceControllerProvider).orbState,
+          DaneOrbState.speaking);
 
       // Interrupt while speaking
       await controller.handleOrbTap();
       expect(tts.stoppedCalled, isTrue);
-      expect(container.read(liveVoiceControllerProvider).orbState, DaneOrbState.listening);
+      expect(container.read(liveVoiceControllerProvider).orbState,
+          DaneOrbState.listening);
 
       // End conversation cleanly
       await controller.endSession();
@@ -271,7 +314,8 @@ void main() {
       expect(ended.audioLevel, 0.0);
     });
 
-    test('handles speech recognition failure and TTS failure gracefully', () async {
+    test('handles speech recognition failure and TTS failure gracefully',
+        () async {
       final speech = _FakeSpeechAdapter();
       final tts = _FakeTtsAdapter()..failOnSpeak = true;
       final container = _createVoiceContainer(speech: speech, tts: tts);
@@ -281,14 +325,18 @@ void main() {
       await controller.startSession();
       speech.emitEngineError('error_no_match');
 
-      expect(container.read(liveVoiceControllerProvider).orbState, DaneOrbState.error);
-      expect(container.read(liveVoiceControllerProvider).errorMessage, contains('error_no_match'));
+      expect(container.read(liveVoiceControllerProvider).orbState,
+          DaneOrbState.error);
+      expect(container.read(liveVoiceControllerProvider).errorMessage,
+          contains('error_no_match'));
 
       await controller.retryAfterError();
-      expect(container.read(liveVoiceControllerProvider).orbState, DaneOrbState.listening);
+      expect(container.read(liveVoiceControllerProvider).orbState,
+          DaneOrbState.listening);
 
       await controller.submitUtteranceForTest('Check TTS failure');
-      expect(container.read(liveVoiceControllerProvider).orbState, DaneOrbState.error);
+      expect(container.read(liveVoiceControllerProvider).orbState,
+          DaneOrbState.error);
       expect(
         container.read(liveVoiceControllerProvider).errorMessage,
         contains('TTS engine unavailable'),
@@ -298,9 +346,14 @@ void main() {
 
   group('Wake-word & dB utilities', () {
     test('matches Hey Dane wake phrases accurately', () {
-      expect(ForegroundPhraseWakeWordEngine.matchesWakePhrase('Hey Dane'), isTrue);
-      expect(ForegroundPhraseWakeWordEngine.matchesWakePhrase('hey dane set timer'), isTrue);
-      expect(ForegroundPhraseWakeWordEngine.matchesWakePhrase('open weather'), isFalse);
+      expect(
+          ForegroundPhraseWakeWordEngine.matchesWakePhrase('Hey Dane'), isTrue);
+      expect(
+          ForegroundPhraseWakeWordEngine.matchesWakePhrase(
+              'hey dane set timer'),
+          isTrue);
+      expect(ForegroundPhraseWakeWordEngine.matchesWakePhrase('open weather'),
+          isFalse);
     });
 
     test('normalizes dB sound levels safely to 0.0..1.0', () {
@@ -311,7 +364,8 @@ void main() {
     });
   });
 
-  testWidgets('HolographicOrb renders cleanly across all live voice states', (tester) async {
+  testWidgets('HolographicOrb renders cleanly across all live voice states',
+      (tester) async {
     for (final orbState in DaneOrbState.values) {
       await tester.pumpWidget(
         MaterialApp(
