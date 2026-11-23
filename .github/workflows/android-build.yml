@@ -35,10 +35,21 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Resolve Gradle Wrapper Version
+        id: gradle-meta
+        run: |
+          GRADLE_VER=$(sed -n 's|.*gradle-\([0-9.]*\)-.*\.zip|\1|p' android/gradle/wrapper/gradle-wrapper.properties | head -n 1)
+          if [ -z "$GRADLE_VER" ]; then
+            echo "Could not resolve Gradle version from android/gradle/wrapper/gradle-wrapper.properties"
+            exit 1
+          fi
+          echo "Resolved Gradle version: $GRADLE_VER"
+          echo "version=$GRADLE_VER" >> "$GITHUB_OUTPUT"
+
       - name: Set Up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.10.2'
+          gradle-version: ${{ steps.gradle-meta.outputs.version }}
 
       - name: Verify Tooling Versions
         run: |
@@ -53,7 +64,7 @@ jobs:
         working-directory: android
         run: |
           if [ ! -f ./gradlew ] || [ ! -f ./gradle/wrapper/gradle-wrapper.jar ]; then
-            gradle wrapper --gradle-version 8.10.2
+            gradle wrapper --gradle-version "${{ steps.gradle-meta.outputs.version }}" --distribution-type all
           fi
           chmod +x ./gradlew
 
