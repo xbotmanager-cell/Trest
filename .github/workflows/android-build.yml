@@ -24,12 +24,10 @@ jobs:
           cache: 'gradle'
 
       - name: Set Up Android SDK & Accept Licenses
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK Platform 35 & Build Tools
-        run: |
-          yes | sdkmanager --licenses > /dev/null
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+        uses: android-actions/setup-android@v4
+        with:
+          accept-android-sdk-licenses: 'true'
+          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
 
       - name: Set Up Flutter Stable
         uses: subosito/flutter-action@v2
