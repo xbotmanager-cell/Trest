@@ -25,7 +25,7 @@ val hasReleaseSigning = keystoreProperties.getProperty("storeFile")?.isNotBlank(
 
 android {
     namespace = "com.heydane.assistant"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
