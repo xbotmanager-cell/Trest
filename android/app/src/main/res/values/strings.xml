@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HEY DANE</string>
+    <string name="accessibility_service_description">HEY DANE uses Accessibility only when you explicitly confirm a screen navigation action. It never captures passwords, PINs, or bypasses lock-screen security.</string>
+    <string name="device_admin_description">Optional device-lock action for HEY DANE when explicitly requested by the user. Does not grant unrestricted device control.</string>
+</resources>

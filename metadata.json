@@ -1,0 +1,6 @@
+{
+  "name": "HEY DANE",
+  "description": "Your Personal AI. Your Digital Power.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
